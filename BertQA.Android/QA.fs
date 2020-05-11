@@ -30,8 +30,11 @@ type Score =
 
 type ScoredAnswer =
     {
-       Answer   : string
-       Logit    : float32
+       Answer    : string
+       Start     : int
+       End       : int
+       Logit     : float32
+       SourceLoc : int
     }
 
 module Scorer =
@@ -309,8 +312,9 @@ module Scorer =
                    then
                    let startT = score.Input.TokenMap.[s]
                    let endT   = score.Input.TokenMap.[e]
+                   let preAns = System.String.Join(" ",score.Input.OrigTokens.[.. startT])
                    let ans = System.String.Join(" ",score.Input.OrigTokens.[startT .. endT])
-                   let scrAns = {Answer=ans; Logit=sL+eL}
+                   let scrAns = {Answer=ans; Start=startT; End=endT; Logit=sL+eL; SourceLoc=preAns.Length}
                    yield scrAns]
 
         
@@ -319,7 +323,10 @@ type TextScorer() =
     interface BertQA.ITextScorer  with 
         member x.Score(context,query) = 
             let scr = Scorer.score context query
-            Scorer.toAnswers scr |> List.sortByDescending (fun x->x.Logit) |> List.tryHead  |> Option.map(fun a->a.Answer)
+            Scorer.toAnswers scr 
+            |> List.sortByDescending (fun x->x.Logit) 
+            |> List.tryHead  
+            |> Option.map(fun a->a.Answer,a.SourceLoc)
             
             //let scr1 = Scorer.score Scorer.testContext2 Scorer.testQ21
             //let ans1 = Scorer.toAnswers scr1 |> List.sortByDescending (fun x->x.Logit) |> List.head

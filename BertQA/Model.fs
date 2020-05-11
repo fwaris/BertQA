@@ -22,7 +22,7 @@ type AppPages = HomePage | QAPage
 type Model = 
   { 
     Contexts        : ContextQ []
-    Score           : string option
+    Score           : (string*int) option
     ScoreRequested  : bool
     ShowDetail      : bool
     Page            : AppPages

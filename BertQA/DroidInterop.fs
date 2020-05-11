@@ -2,7 +2,7 @@
 open Xamarin.Forms
 
 type ITextScorer =
-    abstract member Score:context:string*query:string->string option
+    abstract member Score:context:string*query:string->(string*int)option
 
 module DroidInterop =
 

@@ -12,7 +12,7 @@ module App =
 
     type Msg = 
         | Scoring of context:string*query:string
-        | Scored of string option
+        | Scored of (string*int) option
         | ListItemSel of int option
         | NavigationPopped
        
@@ -48,8 +48,9 @@ module App =
 
     let highlight (text:string) hlt =
         hlt
-        |> Option.map(fun (h:string) -> 
-            let idx = text.IndexOf(h)
+        |> Option.map(fun (h:string,st) -> 
+            let st' = max 0 (st-20)
+            let idx = text.IndexOf(h,st')
             if idx >= 0 then
                 [
                     yield View.Span(text.Substring(0,idx))
