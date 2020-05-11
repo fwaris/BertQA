@@ -224,7 +224,6 @@ module Scorer =
         """
     let tokens = Tokenizer.tokenize strTest
     let encoded = tokens |> List.map WordTokenizer.wordPieces |> List.iter (printfn "%A")
-    *)
 
     let testContext1 = 
         """
@@ -261,6 +260,7 @@ module Scorer =
     let testQ25 = "What century did the Normans first gain their separate identity?"
  
     //let input = Featurizer.toFeatures testQuery1 testContext
+       *)
 
     let topN xs = xs |> Seq.mapi(fun i x -> i,x) |> Seq.sortByDescending snd |> Seq.truncate  PREDICT_ANS_NUM
 
